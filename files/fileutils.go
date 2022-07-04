@@ -23,11 +23,13 @@ func Close(file *os.File) {
 
 func ReadLines(f *os.File) chan string {
 	ch_lines := make(chan string)
-	defer close(ch_lines)
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		ch_lines <- scanner.Text()
-	}
+	go func() {
+		defer close(ch_lines)
+		scanner := bufio.NewScanner(f)
+		for scanner.Scan() {
+			ch_lines <- scanner.Text()
+		}
+	}()
 	return ch_lines
 }
 
