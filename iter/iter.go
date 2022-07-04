@@ -58,6 +58,18 @@ func Map[T any](ch1 chan T, f func(T) T) chan T {
 	return ch2
 }
 
+// Maps input channel in to output channel out (channel of arrays of T) using callback
+func MapSpilt[T any](ch1 chan T, f func(T) []T) chan []T {
+	ch2 := make(chan []T)
+	go func() {
+		defer close(ch2)
+		for x := range ch1 {
+			ch2 <- f(x)
+		}
+	}()
+	return ch2
+}
+
 // Filters input channel in to output channel out using callback
 func Filter[T any](ch1 chan T, f func(T) bool) chan T {
 	ch2 := make(chan T)
@@ -81,7 +93,7 @@ func Reduce[T any](ch1 chan T, f func(T, T) T) T {
 	return temp
 }
 
-// Every : Take every in N item from input channel (backpressure management)
+// Every : Take every in N item from input channel (back pressure management)
 // Ex: Every(in, 2) takes every second item from 'in, put sit into into 'out'
 func Every[T comparable](in chan T, n int) chan T {
 	out := make(chan T)

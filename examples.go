@@ -1,35 +1,73 @@
 package main
 
 import (
+	"fmt"
+	"sort"
+	"strings"
+
 	fi "github.com/serge-hulne/goutils/files"
 	it "github.com/serge-hulne/goutils/iter"
 )
 
 func main() {
 
-	// utils/iter
-	a := []int{1, 2, 3}
-	println(a)
-	b := it.Iterable_from_Array(a)
-
-	for item := range b {
-		println(item)
-	}
-
-	// utils/files
-	println("- - - ")
-
-	_, txt := fi.Read("test.txt")
-	println(txt)
-
-	_, f := fi.Open("test.txt")
+	_, f := fi.Open("../../../100-0.txt")
 
 	lines := fi.ReadLines(f)
 
-	println("- - - ")
+	/*
+		TODO
+			- Faire une variante de Map() (par exemple : Apply()) qui retourne un type composé (slice ou type générique) qui peut être itéré à son tour.
+	*/
 
-	for line := range lines {
-		println(line)
+	wordsArraysStream := it.MapSpilt(lines, SplitAndTrim)
+
+	m := make(map[string]int)
+
+	// Counting frequency using a map
+	for words := range wordsArraysStream {
+		for _, w := range words {
+			m[w]++
+		}
 	}
 
+	// Map to array (for sorting)
+	var wordCount []Pair
+	for k, v := range m {
+		wordCount = append(wordCount, Pair{k, v})
+	}
+
+	/*
+		TODO: create a (sortable) frequency map (as in Nim)
+	*/
+
+	// Sorting array
+	sort.SliceStable(wordCount, func(i, j int) bool {
+		return wordCount[i].cpt > wordCount[j].cpt
+	})
+
+	// Print top 10
+	for index, item := range wordCount {
+		if index < 10 {
+			fmt.Printf("%v\n", item)
+		}
+	}
+}
+
+type Pair struct {
+	word string
+	cpt  int
+}
+
+func SplitAndTrim(x string) []string {
+	x = strings.ToLower(x)
+	words := strings.Split(x, " ")
+	var temp []string
+	for _, w := range words {
+		w = strings.Trim(w, " ’',./()\";:!?")
+		if len(w) > 0 {
+			temp = append(temp, w)
+		}
+	}
+	return temp
 }
