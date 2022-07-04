@@ -2,7 +2,7 @@ Go Utils
 
 Go language utils for  
 
-- implementing iterators
-- handling files
-- running tasks in parallel
+- Implementing iterators
+- Handling files
+- Running tasks in parallel
   
