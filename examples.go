@@ -7,6 +7,7 @@ import (
 
 func main() {
 
+	// utils/iter
 	a := []int{1, 2, 3}
 	println(a)
 	b := it.Iterable_from_Array(a)
@@ -15,6 +16,7 @@ func main() {
 		println(item)
 	}
 
+	// utils/files
 	println("- - - ")
 
 	_, txt := fi.Read("test.txt")
