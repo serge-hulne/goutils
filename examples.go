@@ -7,6 +7,7 @@ import (
 
 	fi "github.com/serge-hulne/goutils/files"
 	it "github.com/serge-hulne/goutils/iter"
+	. "github.com/serge-hulne/goutils/str"
 )
 
 func main() {
@@ -52,6 +53,13 @@ func main() {
 			fmt.Printf("%v\n", item)
 		}
 	}
+
+	println("- - - ")
+
+	// Testing Str:
+	s := Str{"Hello Woild"}
+	fmt.Printf("%s\n", s.ReplaceAll("i", "r").Capitalize())
+	println(s.Str)
 }
 
 type Pair struct {
